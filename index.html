@@ -1,0 +1,1278 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#f7f8fc" />
+    <meta
+      name="description"
+      content="Explore a free fake REST API for developers. Browse endpoints and try live requests in the API playground."
+    />
+    <title>DummyJSON — The friendly fake REST API</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --ink: #181b2e;
+        --muted: #73778e;
+        --line: #e9eaf1;
+        --paper: #fff;
+        --canvas: #f7f8fc;
+        --purple: #7657f6;
+        --purple-dark: #6343e9;
+        --green: #38bd8b;
+        --mono: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+        --sans:
+          Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+          "Segoe UI", sans-serif;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        margin: 0;
+        background: var(--canvas);
+        color: var(--ink);
+        font-family: var(--sans);
+        font-size: 14px;
+      }
+      button,
+      input {
+        font: inherit;
+      }
+      button {
+        cursor: pointer;
+      }
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      .topbar {
+        height: 68px;
+        background: rgba(255, 255, 255, 0.94);
+        border-bottom: 1px solid var(--line);
+        display: flex;
+        align-items: center;
+        padding: 0 5.2%;
+        gap: 38px;
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        backdrop-filter: blur(14px);
+      }
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 18px;
+        font-weight: 760;
+        letter-spacing: -0.7px;
+        white-space: nowrap;
+      }
+      .brand-mark {
+        display: grid;
+        place-items: center;
+        width: 33px;
+        height: 33px;
+        border-radius: 10px;
+        color: #fff;
+        background: linear-gradient(140deg, #9a80ff, #6845ec);
+        box-shadow: 0 4px 10px #7657f641;
+        font-size: 18px;
+      }
+      .brand span:last-child {
+        color: var(--purple);
+      }
+      .nav-links {
+        display: flex;
+        align-items: center;
+        gap: 27px;
+        color: #666a81;
+        font-weight: 550;
+      }
+      .nav-links a:hover,
+      .nav-links .active {
+        color: var(--purple);
+      }
+      .top-actions {
+        margin-left: auto;
+        display: flex;
+        gap: 10px;
+        align-items: center;
+      }
+      .github-link {
+        font-weight: 600;
+        color: #50546b;
+        padding: 9px 12px;
+      }
+      .github-link:hover {
+        color: var(--purple);
+      }
+      .start-link {
+        background: var(--ink);
+        color: #fff;
+        padding: 10px 16px;
+        border-radius: 9px;
+        font-weight: 650;
+      }
+      .start-link:hover {
+        background: #30334a;
+      }
+
+      .hero {
+        background:
+          radial-gradient(ellipse at 76% 30%, #ebe7ff 0, transparent 35%),
+          linear-gradient(120deg, #fff 5%, #fbfaff 67%, #f5f2ff);
+        padding: 62px 24px 59px;
+        border-bottom: 1px solid var(--line);
+      }
+      .hero-inner {
+        max-width: 1110px;
+        margin: 0 auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 40px;
+      }
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: #6851d8;
+        font-weight: 700;
+        font-size: 12px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        background: #f0edff;
+        border: 1px solid #e7e1ff;
+        border-radius: 20px;
+        padding: 7px 11px;
+      }
+      .eyebrow-dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: #43c494;
+        box-shadow: 0 0 0 3px #43c49425;
+      }
+      h1 {
+        margin: 18px 0 13px;
+        max-width: 570px;
+        font-size: clamp(34px, 4.3vw, 50px);
+        line-height: 1.12;
+        letter-spacing: -2.5px;
+      }
+      h1 em {
+        color: var(--purple);
+        font-style: normal;
+      }
+      .hero-copy {
+        max-width: 520px;
+        color: var(--muted);
+        font-size: 16px;
+        line-height: 1.7;
+        margin: 0;
+      }
+      .hero-stats {
+        display: flex;
+        gap: 29px;
+        margin-top: 24px;
+        color: #72768c;
+        font-size: 12px;
+      }
+      .hero-stats strong {
+        display: block;
+        color: var(--ink);
+        font-size: 16px;
+        margin-bottom: 3px;
+      }
+      .hero-code {
+        width: 350px;
+        flex: 0 0 350px;
+        background: #1b1d30;
+        border: 1px solid #303247;
+        border-radius: 14px;
+        padding: 17px 19px 19px;
+        box-shadow: 0 20px 55px #3a2f711c;
+        transform: rotate(1.5deg);
+      }
+      .code-top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        color: #9295aa;
+        font-size: 11px;
+        margin-bottom: 21px;
+      }
+      .traffic {
+        display: flex;
+        gap: 5px;
+      }
+      .traffic i {
+        height: 7px;
+        width: 7px;
+        display: block;
+        border-radius: 50%;
+        background: #ff797d;
+      }
+      .traffic i:nth-child(2) {
+        background: #f6c45f;
+      }
+      .traffic i:nth-child(3) {
+        background: #46ce98;
+      }
+      .hero-code code {
+        color: #e2dfff;
+        font-family: var(--mono);
+        font-size: 12px;
+        line-height: 2;
+        white-space: nowrap;
+      }
+      .hero-code .purple {
+        color: #b69dff;
+      }
+      .hero-code .green {
+        color: #76ddb4;
+      }
+      .hero-code .orange {
+        color: #ffc483;
+      }
+
+      .layout {
+        width: min(1190px, calc(100% - 48px));
+        margin: 32px auto 80px;
+        display: grid;
+        grid-template-columns: 226px minmax(0, 1fr);
+        gap: 30px;
+        align-items: start;
+      }
+      .sidebar {
+        position: sticky;
+        top: 91px;
+      }
+      .side-label {
+        color: #989bae;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        font-weight: 720;
+        font-size: 10px;
+        padding: 5px 11px 11px;
+      }
+      .side-search {
+        position: relative;
+        margin-bottom: 22px;
+      }
+      .side-search input {
+        width: 100%;
+        border: 1px solid var(--line);
+        border-radius: 9px;
+        height: 38px;
+        padding: 0 12px 0 34px;
+        background: #fff;
+        color: var(--ink);
+        outline: none;
+        font-size: 12px;
+      }
+      .side-search input:focus {
+        border-color: #b5a6ff;
+        box-shadow: 0 0 0 3px #7657f61a;
+      }
+      .search-icon {
+        position: absolute;
+        top: 10px;
+        left: 12px;
+        color: #9a9caf;
+        font-size: 14px;
+      }
+      .endpoint-nav {
+        display: grid;
+        gap: 3px;
+      }
+      .endpoint-item {
+        width: 100%;
+        display: flex;
+        gap: 11px;
+        align-items: center;
+        border: 0;
+        background: transparent;
+        text-align: left;
+        border-radius: 8px;
+        padding: 9px 10px;
+        color: #686c82;
+        font-size: 13px;
+        font-weight: 550;
+        transition:
+          background 0.16s,
+          color 0.16s;
+      }
+      .endpoint-item:hover {
+        background: #efedfb;
+        color: var(--purple-dark);
+      }
+      .endpoint-item.selected {
+        background: #efedff;
+        color: #6247e8;
+        font-weight: 680;
+      }
+      .endpoint-icon {
+        width: 20px;
+        height: 20px;
+        display: grid;
+        place-items: center;
+        border-radius: 6px;
+        background: #f0f1f6;
+        font-size: 11px;
+      }
+      .selected .endpoint-icon {
+        background: #e3dcff;
+      }
+      .method {
+        margin-left: auto;
+        font-family: var(--mono);
+        font-size: 9px;
+        font-weight: 700;
+        color: #32a77b;
+      }
+      .sidebar-note {
+        margin-top: 25px;
+        padding: 14px;
+        border: 1px solid #e8e4fc;
+        border-radius: 10px;
+        background: linear-gradient(135deg, #fff, #faf8ff);
+        color: #777b91;
+        font-size: 11px;
+        line-height: 1.6;
+      }
+      .sidebar-note strong {
+        display: block;
+        color: #46405f;
+        font-size: 12px;
+        margin-bottom: 4px;
+      }
+      .sidebar-note a {
+        color: var(--purple);
+        font-weight: 650;
+      }
+
+      .content {
+        min-width: 0;
+      }
+      .section-heading {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 20px;
+        margin: 0 0 19px;
+      }
+      .section-heading h2 {
+        margin: 0 0 5px;
+        letter-spacing: -0.7px;
+        font-size: 21px;
+      }
+      .section-heading p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 12px;
+      }
+      .badge {
+        background: #fff;
+        border: 1px solid var(--line);
+        color: #777b90;
+        font-size: 11px;
+        padding: 7px 10px;
+        border-radius: 7px;
+        white-space: nowrap;
+      }
+      .card {
+        background: var(--paper);
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        box-shadow: 0 3px 12px #20224306;
+      }
+      .playground {
+        padding: 20px;
+      }
+      .playground-title {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        font-weight: 680;
+        font-size: 13px;
+        margin-bottom: 14px;
+      }
+      .spark {
+        color: #8a6cf2;
+        font-size: 17px;
+      }
+      .request-bar {
+        min-height: 47px;
+        display: flex;
+        padding: 5px;
+        border: 1px solid #e5e6ed;
+        border-radius: 9px;
+        background: #fbfbfd;
+        gap: 8px;
+        align-items: center;
+      }
+      .request-method {
+        background: #e8fbf3;
+        color: #17966a;
+        border-radius: 6px;
+        padding: 7px 9px;
+        font-family: var(--mono);
+        font-size: 10px;
+        font-weight: 800;
+      }
+      .request-url {
+        min-width: 0;
+        flex: 1;
+        overflow: hidden;
+        color: #555a70;
+        font-family: var(--mono);
+        font-size: 11px;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        padding: 0 4px;
+      }
+      .request-url b {
+        color: #7c5bef;
+        font-weight: 600;
+      }
+      .send-button {
+        color: white;
+        background: var(--purple);
+        border: 0;
+        border-radius: 7px;
+        padding: 9px 15px;
+        font-size: 11px;
+        font-weight: 700;
+      }
+      .send-button:hover {
+        background: var(--purple-dark);
+      }
+      .send-button:disabled {
+        opacity: 0.65;
+        cursor: wait;
+      }
+      .query-wrap {
+        margin-top: 12px;
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        color: #898da1;
+        font-size: 11px;
+      }
+      .query-wrap input {
+        height: 32px;
+        width: 130px;
+        padding: 0 9px;
+        border: 1px solid var(--line);
+        border-radius: 7px;
+        outline: none;
+        font-family: var(--mono);
+        font-size: 11px;
+      }
+      .query-wrap input:focus {
+        border-color: #b5a6ff;
+      }
+      .response {
+        margin-top: 19px;
+        border-radius: 9px;
+        overflow: hidden;
+        background: #1d1f32;
+        color: #e4e5ef;
+      }
+      .response-head {
+        min-height: 43px;
+        border-bottom: 1px solid #34364a;
+        padding: 0 14px;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+      }
+      .response-head strong {
+        font-size: 11px;
+        font-weight: 680;
+      }
+      .status {
+        font-family: var(--mono);
+        color: #6ce0ad;
+        font-size: 10px;
+      }
+      .response-time {
+        color: #9396a9;
+        font-family: var(--mono);
+        font-size: 10px;
+      }
+      .copy-button {
+        margin-left: auto;
+        border: 1px solid #3e4055;
+        background: transparent;
+        color: #b6b8c7;
+        border-radius: 5px;
+        font-size: 10px;
+        padding: 5px 8px;
+      }
+      .copy-button:hover {
+        color: white;
+        border-color: #7770ae;
+      }
+      pre {
+        margin: 0;
+        padding: 16px;
+        max-height: 305px;
+        min-height: 115px;
+        overflow: auto;
+        font: 11px/1.75 var(--mono);
+        color: #dedfee;
+        tab-size: 2;
+      }
+      .json-key {
+        color: #b8a4ff;
+      }
+      .json-string {
+        color: #89ddb6;
+      }
+      .json-number {
+        color: #ffc780;
+      }
+      .json-boolean {
+        color: #84c6ff;
+      }
+
+      .endpoint-section {
+        margin-top: 30px;
+      }
+      .endpoint-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+      }
+      .endpoint-card {
+        cursor: pointer;
+        text-align: left;
+        color: inherit;
+        padding: 15px;
+        transition:
+          transform 0.17s,
+          border-color 0.17s,
+          box-shadow 0.17s;
+      }
+      .endpoint-card:hover {
+        transform: translateY(-2px);
+        border-color: #cfc5ff;
+        box-shadow: 0 8px 18px #3025790b;
+      }
+      .endpoint-card-top {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 9px;
+      }
+      .endpoint-card h3 {
+        margin: 0;
+        font-size: 13px;
+        letter-spacing: -0.1px;
+      }
+      .get-pill {
+        margin-left: auto;
+        border-radius: 4px;
+        padding: 4px 6px;
+        color: #21865f;
+        background: #eaf9f2;
+        font: 700 9px var(--mono);
+      }
+      .endpoint-card p {
+        margin: 0;
+        color: #84889c;
+        font-size: 11px;
+        line-height: 1.55;
+      }
+      .endpoint-card code {
+        display: inline-block;
+        margin-top: 11px;
+        border-radius: 5px;
+        background: #f4f3fa;
+        color: #6b57bd;
+        padding: 5px 7px;
+        font: 10px var(--mono);
+      }
+      .empty-results {
+        display: none;
+        padding: 24px;
+        color: var(--muted);
+        font-size: 12px;
+        text-align: center;
+        grid-column: 1 / -1;
+      }
+
+      footer {
+        border-top: 1px solid var(--line);
+        padding: 24px;
+        color: #9295a7;
+        text-align: center;
+        font-size: 11px;
+      }
+      footer strong {
+        color: #6e56da;
+      }
+      .toast {
+        position: fixed;
+        bottom: 24px;
+        left: 50%;
+        transform: translate(-50%, 15px);
+        opacity: 0;
+        pointer-events: none;
+        background: #22243a;
+        color: #fff;
+        padding: 10px 15px;
+        border-radius: 8px;
+        font-size: 12px;
+        box-shadow: 0 8px 30px #11122a30;
+        transition: 0.2s;
+        z-index: 20;
+      }
+      .toast.show {
+        opacity: 1;
+        transform: translate(-50%, 0);
+      }
+
+      @media (max-width: 800px) {
+        .topbar {
+          padding: 0 22px;
+          gap: 22px;
+        }
+        .nav-links {
+          gap: 15px;
+        }
+        .hero {
+          padding: 45px 24px;
+        }
+        .hero-code {
+          width: 300px;
+          flex-basis: 300px;
+        }
+        .layout {
+          width: calc(100% - 40px);
+          grid-template-columns: 190px minmax(0, 1fr);
+          gap: 18px;
+        }
+      }
+      @media (max-width: 640px) {
+        .topbar {
+          height: 60px;
+        }
+        .nav-links {
+          display: none;
+        }
+        .github-link {
+          display: none;
+        }
+        .hero-inner {
+          display: block;
+        }
+        .hero {
+          padding: 39px 21px;
+        }
+        h1 {
+          letter-spacing: -1.8px;
+        }
+        .hero-copy {
+          font-size: 14px;
+        }
+        .hero-code {
+          display: none;
+        }
+        .hero-stats {
+          gap: 21px;
+        }
+        .layout {
+          display: flex;
+          flex-direction: column;
+          width: calc(100% - 32px);
+          margin-top: 22px;
+          gap: 24px;
+        }
+        .sidebar {
+          position: static;
+          width: 100%;
+        }
+        .side-label {
+          padding-left: 0;
+        }
+        .endpoint-nav {
+          display: flex;
+          overflow-x: auto;
+          padding-bottom: 5px;
+        }
+        .endpoint-item {
+          width: auto;
+          flex: 0 0 auto;
+          border: 1px solid var(--line);
+          background: white;
+          padding: 7px 10px;
+        }
+        .endpoint-item.selected {
+          border-color: #dbd3ff;
+        }
+        .endpoint-item .method,
+        .sidebar-note {
+          display: none;
+        }
+        .side-search {
+          margin-bottom: 12px;
+        }
+        .content {
+          width: 100%;
+        }
+        .playground {
+          padding: 15px;
+        }
+        .request-bar {
+          gap: 5px;
+        }
+        .request-url {
+          font-size: 9px;
+        }
+        .send-button {
+          padding: 9px 10px;
+        }
+        .endpoint-grid {
+          gap: 9px;
+        }
+        .endpoint-card {
+          padding: 12px;
+        }
+      }
+      @media (max-width: 390px) {
+        .endpoint-grid {
+          grid-template-columns: 1fr;
+        }
+        .badge {
+          display: none;
+        }
+        .hero-stats {
+          gap: 15px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="#" aria-label="DummyJSON home"
+        ><span class="brand-mark">✳</span><span>dummy<span>json</span></span></a
+      >
+      <nav class="nav-links" aria-label="Main navigation">
+        <a class="active" href="#docs">Docs</a>
+        <a href="#endpoints">Endpoints</a>
+        <a
+          href="https://github.com/Ovi/DummyJSON"
+          target="_blank"
+          rel="noreferrer"
+          >GitHub ↗</a
+        >
+      </nav>
+      <div class="top-actions">
+        <a class="github-link" href="#playground">API Playground</a>
+        <a class="start-link" href="#playground"
+          >Get started <span aria-hidden="true">→</span></a
+        >
+      </div>
+    </header>
+
+    <main>
+      <section class="hero" id="docs">
+        <div class="hero-inner">
+          <div>
+            <span class="eyebrow"
+              ><span class="eyebrow-dot"></span> Free fake REST API</span
+            >
+            <h1>The friendly API<br />for <em>developers.</em></h1>
+            <p class="hero-copy">
+              A free, fast, and easy-to-use REST API filled with placeholder
+              data. Perfect for your next project, prototype, or tutorial.
+            </p>
+            <div class="hero-stats">
+              <div><strong>100+</strong>products &amp; recipes</div>
+              <div><strong>Zero</strong>setup required</div>
+              <div><strong>Free</strong>forever &amp; open</div>
+            </div>
+          </div>
+          <div class="hero-code" aria-label="Example API request">
+            <div class="code-top">
+              <span class="traffic"><i></i><i></i><i></i></span
+              ><span>quick-start.js</span><span></span>
+            </div>
+            <code
+              ><span class="purple">const</span> response =
+              <span class="purple">await</span> fetch(<br />
+              &nbsp;&nbsp;<span class="green"
+                >'https://dummyjson.com/products/1'</span
+              ><br />
+              );<br />
+              <span class="purple">const</span> product =
+              <span class="purple">await</span> response.<span class="orange"
+                >json</span
+              >();<br />
+              console.<span class="orange">log</span>(product.<span
+                class="green"
+                >title</span
+              >);</code
+            >
+          </div>
+        </div>
+      </section>
+
+      <div class="layout">
+        <aside class="sidebar" aria-label="API endpoint navigation">
+          <div class="side-label">Explore the API</div>
+          <label class="side-search">
+            <span class="search-icon" aria-hidden="true">⌕</span>
+            <input
+              id="endpoint-search"
+              type="search"
+              placeholder="Find an endpoint..."
+              aria-label="Find an endpoint"
+            />
+          </label>
+          <nav class="endpoint-nav" id="endpoint-nav"></nav>
+          <div class="sidebar-note">
+            <strong>Ready to build?</strong>
+            No API key, sign-up, or setup needed.<br />
+            <a href="#playground">Try your first request →</a>
+          </div>
+        </aside>
+
+        <div class="content">
+          <section id="playground">
+            <div class="section-heading">
+              <div>
+                <h2>API Playground</h2>
+                <p>Pick an endpoint and make your first request.</p>
+              </div>
+              <span class="badge">No API key required</span>
+            </div>
+            <div class="card playground">
+              <div class="playground-title">
+                <span class="spark">✳</span> Try it out
+              </div>
+              <div class="request-bar">
+                <span class="request-method">GET</span>
+                <div
+                  class="request-url"
+                  id="request-url"
+                  aria-label="Request URL"
+                ></div>
+                <button class="send-button" id="send-request" type="button">
+                  Send request <span aria-hidden="true">→</span>
+                </button>
+              </div>
+              <label class="query-wrap" for="limit-input"
+                >Limit results
+                <input
+                  id="limit-input"
+                  type="number"
+                  min="1"
+                  max="30"
+                  placeholder="10"
+              /></label>
+              <div class="response">
+                <div class="response-head">
+                  <strong>Response</strong
+                  ><span class="status" id="response-status">200 OK</span
+                  ><span class="response-time" id="response-time">Example</span>
+                  <button class="copy-button" id="copy-response" type="button">
+                    Copy JSON
+                  </button>
+                </div>
+                <pre id="response-json" aria-live="polite"></pre>
+              </div>
+            </div>
+          </section>
+
+          <section class="endpoint-section" id="endpoints">
+            <div class="section-heading">
+              <div>
+                <h2>Explore endpoints</h2>
+                <p>Everything you need to build something great.</p>
+              </div>
+              <span class="badge" id="endpoint-count">8 resources</span>
+            </div>
+            <div class="endpoint-grid" id="endpoint-grid">
+              <div class="empty-results" id="empty-results">
+                No endpoints match your search.
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+    </main>
+
+    <footer>
+      Made for developers, <strong>by developers.</strong> &nbsp; · &nbsp; A
+      friendly fake REST API
+    </footer>
+    <div class="toast" id="toast" role="status"></div>
+
+    <script>
+      const endpoints = [
+        {
+          name: "Products",
+          path: "/products",
+          icon: "▣",
+          description:
+            "Explore a catalog of products, prices, ratings, and more.",
+          sample: {
+            products: [
+              {
+                id: 1,
+                title: "Essence Mascara Lash Princess",
+                price: 9.99,
+                rating: 4.94,
+              },
+            ],
+            total: 194,
+            skip: 0,
+            limit: 30,
+          },
+        },
+        {
+          name: "Users",
+          path: "/users",
+          icon: "♙",
+          description:
+            "Profiles with names, addresses, contact details, and photos.",
+          sample: {
+            users: [
+              {
+                id: 1,
+                firstName: "Emily",
+                lastName: "Johnson",
+                age: 28,
+                email: "emily.johnson@x.dummyjson.com",
+              },
+            ],
+            total: 208,
+            skip: 0,
+            limit: 30,
+          },
+        },
+        {
+          name: "Posts",
+          path: "/posts",
+          icon: "▤",
+          description: "Posts with tags, reactions, and author information.",
+          sample: {
+            posts: [
+              {
+                id: 1,
+                title: "His mother had always taught him",
+                body: "His mother had always taught him not to ever think of himself as better than others.",
+                tags: ["history", "american", "crime"],
+                reactions: { likes: 192, dislikes: 25 },
+              },
+            ],
+            total: 251,
+            skip: 0,
+            limit: 30,
+          },
+        },
+        {
+          name: "Comments",
+          path: "/comments",
+          icon: "▱",
+          description: "Conversations and comments linked to posts and users.",
+          sample: {
+            comments: [
+              {
+                id: 1,
+                body: "This is some awesome thinking!",
+                postId: 1,
+                likes: 9,
+                user: { id: 2, username: "emilys" },
+              },
+            ],
+            total: 340,
+            skip: 0,
+            limit: 30,
+          },
+        },
+        {
+          name: "Carts",
+          path: "/carts",
+          icon: "⌑",
+          description: "Shopping carts filled with products and totals.",
+          sample: {
+            carts: [
+              {
+                id: 1,
+                products: [
+                  {
+                    id: 144,
+                    title: "Cricket Helmet",
+                    quantity: 2,
+                    price: 44.99,
+                  },
+                ],
+                total: 4798,
+                totalProducts: 5,
+              },
+            ],
+            total: 20,
+            skip: 0,
+            limit: 30,
+          },
+        },
+        {
+          name: "Recipes",
+          path: "/recipes",
+          icon: "◉",
+          description:
+            "Recipes with ingredients, instructions, and cook times.",
+          sample: {
+            recipes: [
+              {
+                id: 1,
+                name: "Classic Margherita Pizza",
+                cuisine: "Italian",
+                difficulty: "Easy",
+                rating: 4.6,
+              },
+            ],
+            total: 50,
+            skip: 0,
+            limit: 30,
+          },
+        },
+        {
+          name: "Quotes",
+          path: "/quotes",
+          icon: "❝",
+          description: "A little inspiration, one quote at a time.",
+          sample: {
+            quotes: [
+              {
+                id: 1,
+                quote:
+                  "Your heart is the size of an ocean. Go find yourself in its hidden depths.",
+                author: "Rumi",
+              },
+            ],
+            total: 1454,
+            skip: 0,
+            limit: 30,
+          },
+        },
+        {
+          name: "Todos",
+          path: "/todos",
+          icon: "✓",
+          description: "Simple todos to help bring your app to life.",
+          sample: {
+            todos: [
+              {
+                id: 1,
+                todo: "Do something nice for someone I care about",
+                completed: true,
+                userId: 26,
+              },
+            ],
+            total: 254,
+            skip: 0,
+            limit: 30,
+          },
+        },
+      ];
+
+      const nav = document.getElementById("endpoint-nav");
+      const grid = document.getElementById("endpoint-grid");
+      const requestUrl = document.getElementById("request-url");
+      const responseJson = document.getElementById("response-json");
+      const responseStatus = document.getElementById("response-status");
+      const responseTime = document.getElementById("response-time");
+      const search = document.getElementById("endpoint-search");
+      const toast = document.getElementById("toast");
+      let selectedEndpoint = endpoints[0];
+      let currentResponse = selectedEndpoint.sample;
+      let toastTimer;
+
+      function renderJson(data) {
+        const escaped = JSON.stringify(data, null, 2)
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;");
+        return escaped.replace(
+          /("(?:\\.|[^"\\])*")(\s*:)?|(-?\b\d+(?:\.\d+)?\b)|\b(true|false|null)\b/g,
+          (match, string, colon, number, boolean) => {
+            if (string)
+              return `<span class="json-${colon ? "key" : "string"}">${string}</span>${colon || ""}`;
+            if (number) return `<span class="json-number">${number}</span>`;
+            return `<span class="json-boolean">${boolean}</span>`;
+          },
+        );
+      }
+
+      function setResponse(data, status, elapsed) {
+        currentResponse = data;
+        responseJson.innerHTML = renderJson(data);
+        responseStatus.textContent = status;
+        responseStatus.style.color = status.startsWith("200")
+          ? "#6ce0ad"
+          : "#ff9298";
+        responseTime.textContent = elapsed;
+      }
+
+      function updateUrl() {
+        const limit = document.getElementById("limit-input").value.trim();
+        requestUrl.innerHTML = `<span>https://dummyjson.com</span><b>${selectedEndpoint.path}</b>${limit ? `?limit=<b>${escapeHtml(limit)}</b>` : ""}`;
+      }
+
+      function escapeHtml(text) {
+        return text
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;")
+          .replace(/'/g, "&#039;");
+      }
+
+      function renderEndpoints(filter = "") {
+        const query = filter.trim().toLowerCase();
+        const visible = endpoints.filter(
+          (item) =>
+            item.name.toLowerCase().includes(query) ||
+            item.path.includes(query) ||
+            item.description.toLowerCase().includes(query),
+        );
+        nav.innerHTML = visible
+          .map(
+            (item) =>
+              `<button type="button" class="endpoint-item${item === selectedEndpoint ? " selected" : ""}" data-path="${item.path}"><span class="endpoint-icon">${item.icon}</span>${item.name}<span class="method">GET</span></button>`,
+          )
+          .join("");
+        grid
+          .querySelectorAll(".endpoint-card")
+          .forEach((card) => card.remove());
+        document.getElementById("empty-results").style.display = visible.length
+          ? "none"
+          : "block";
+        document.getElementById("endpoint-count").textContent =
+          `${visible.length} ${visible.length === 1 ? "resource" : "resources"}`;
+        const cards = visible.map((item) => {
+          const card = document.createElement("button");
+          card.type = "button";
+          card.className = "card endpoint-card";
+          card.dataset.path = item.path;
+          card.innerHTML = `<div class="endpoint-card-top"><span class="endpoint-icon">${item.icon}</span><h3>${item.name}</h3><span class="get-pill">GET</span></div><p>${item.description}</p><code>${item.path}</code>`;
+          return card;
+        });
+        const emptyResults = document.getElementById("empty-results");
+        cards.forEach((card) => grid.insertBefore(card, emptyResults));
+      }
+
+      function selectEndpoint(path) {
+        selectedEndpoint =
+          endpoints.find((item) => item.path === path) || endpoints[0];
+        updateUrl();
+        renderEndpoints(search.value);
+        setResponse(selectedEndpoint.sample, "200 OK", "Example");
+      }
+
+      nav.addEventListener("click", (event) => {
+        const item = event.target.closest("[data-path]");
+        if (item) selectEndpoint(item.dataset.path);
+      });
+      grid.addEventListener("click", (event) => {
+        const item = event.target.closest("[data-path]");
+        if (item) {
+          selectEndpoint(item.dataset.path);
+          document
+            .getElementById("playground")
+            .scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+      });
+      search.addEventListener("input", () => renderEndpoints(search.value));
+      document
+        .getElementById("limit-input")
+        .addEventListener("input", updateUrl);
+
+      document
+        .getElementById("send-request")
+        .addEventListener("click", async (event) => {
+          const button = event.currentTarget;
+          const limitField = document.getElementById("limit-input");
+          const limit = limitField.value.trim();
+          if (
+            limit &&
+            (!Number.isInteger(Number(limit)) ||
+              Number(limit) < 1 ||
+              Number(limit) > 30)
+          ) {
+            limitField.setCustomValidity(
+              "Enter a whole number between 1 and 30.",
+            );
+            limitField.reportValidity();
+            return;
+          }
+          limitField.setCustomValidity("");
+          const url = `https://dummyjson.com${selectedEndpoint.path}${limit ? `?limit=${encodeURIComponent(limit)}` : ""}`;
+          button.disabled = true;
+          button.textContent = "Loading…";
+          responseStatus.textContent = "Loading";
+          responseStatus.style.color = "#ffc780";
+          responseTime.textContent = "";
+          const started = performance.now();
+          try {
+            const response = await fetch(url, {
+              headers: { Accept: "application/json" },
+            });
+            const data = await response.json();
+            const elapsed = `${Math.round(performance.now() - started)} ms`;
+            setResponse(
+              data,
+              `${response.status} ${response.statusText || (response.ok ? "OK" : "Error")}`,
+              elapsed,
+            );
+          } catch (error) {
+            setResponse(
+              {
+                error:
+                  "Unable to reach the API. Check your connection and try again.",
+                details: error.message,
+              },
+              "Request failed",
+              `${Math.round(performance.now() - started)} ms`,
+            );
+          } finally {
+            button.disabled = false;
+            button.innerHTML = 'Send request <span aria-hidden="true">→</span>';
+          }
+        });
+
+      document
+        .getElementById("copy-response")
+        .addEventListener("click", async () => {
+          try {
+            await navigator.clipboard.writeText(
+              JSON.stringify(currentResponse, null, 2),
+            );
+            toast.textContent = "Response copied to clipboard";
+          } catch (error) {
+            toast.textContent =
+              "Clipboard access is unavailable in this browser";
+          }
+          toast.classList.add("show");
+          clearTimeout(toastTimer);
+          toastTimer = setTimeout(() => toast.classList.remove("show"), 2200);
+        });
+
+      updateUrl();
+      renderEndpoints();
+      setResponse(selectedEndpoint.sample, "200 OK", "Example");
+    </script>
+  </body>
+</html>
