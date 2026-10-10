@@ -767,8 +767,8 @@
         ><span class="brand-mark">✳</span><span>dummy<span>json</span></span></a
       >
       <nav class="nav-links" aria-label="Main navigation">
-        <a class="active" href="#docs">Docs</a>
-        <a href="#endpoints">Endpoints</a>
+        <a class="active" href="#docs">Documents</a>
+        <a href="#endpoints">Endpoint</a>
         <a
           href="https://github.com/Ovi/DummyJSON"
           target="_blank"
@@ -779,7 +779,7 @@
       <div class="top-actions">
         <a class="github-link" href="#playground">API Playground</a>
         <a class="start-link" href="#playground"
-          >Get started <span aria-hidden="true">→</span></a
+          >started <span aria-hidden="true">→</span></a
         >
       </div>
     </header>
@@ -826,7 +826,6 @@
           </div>
         </div>
       </section>
-
       <div class="layout">
         <aside class="sidebar" aria-label="API endpoint navigation">
           <div class="side-label">Explore the API</div>
@@ -841,7 +840,7 @@
           </label>
           <nav class="endpoint-nav" id="endpoint-nav"></nav>
           <div class="sidebar-note">
-            <strong>Ready to build?</strong>
+            <strong>Are you Ready to build?</strong>
             No API key, sign-up, or setup needed.<br />
             <a href="#playground">Try your first request →</a>
           </div>
@@ -917,7 +916,6 @@
       friendly fake REST API
     </footer>
     <div class="toast" id="toast" role="status"></div>
-
     <script>
       const endpoints = [
         {
@@ -1115,7 +1113,6 @@
           },
         );
       }
-
       function setResponse(data, status, elapsed) {
         currentResponse = data;
         responseJson.innerHTML = renderJson(data);
@@ -1139,7 +1136,6 @@
           .replace(/"/g, "&quot;")
           .replace(/'/g, "&#039;");
       }
-
       function renderEndpoints(filter = "") {
         const query = filter.trim().toLowerCase();
         const visible = endpoints.filter(
